@@ -1,5 +1,5 @@
 {
-  "name": "up-koa",
+  "name": "up-log",
   "hooks": {
     "build": "make"
   },
