@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "@koa/cors": "^2.2.1",
+    "aws-sdk": "^2.166.0",
+    "config": "^1.28.1",
+    "jsonwebtoken": "^8.1.0",
+    "koa": "^2.4.1",
+    "koa-body": "^2.5.0",
+    "koa-router": "^7.3.0",
+    "koa-xauth": "^0.6.0",
+    "koa-xerror": "^0.3.0",
+    "koa-xlog": "^0.2.0",
+    "lodash": "^4.17.4",
+    "tracer": "^0.8.11",
+    "uuid": "^3.1.0"
+  },
+  "scripts": {
+    "start": "node app"
+  }
+}
