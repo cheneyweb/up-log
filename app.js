@@ -26,4 +26,4 @@ app.use(logrouter.routes())             // 业务路由中间件
 
 // 启动应用服务
 app.listen(PORT)
-log.info(`up-koa服务启动【执行环境:${process.env.NODE_ENV},端口:${PORT}】`)
+log.info(`up-log服务启动【执行环境:${process.env.NODE_ENV},端口:${PORT}】`)

@@ -10,7 +10,7 @@
     },
     "auth": {
         "secret": "cheneyweb",
-        "pass": ["/auth"],
+        "pass": ["/reg","/auth","uplog"],
         "role":{
             "admin":[".*"],
             "financialAdmin":["/financial/*"],
