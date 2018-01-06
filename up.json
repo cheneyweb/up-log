@@ -8,5 +8,8 @@
   },
   "lambda": {
     "memory": 128
+  },
+  "cors": {
+    "enable": true
   }
 }
