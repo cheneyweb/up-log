@@ -28,15 +28,15 @@ router.get('/vaptcha/getDownTime', async function (ctx, next) {
 
 // 用户注册
 router.post('/reg', async function (ctx, next) {
+    inparam = ctx.request.body
     try {
-        await vaptcha.validate(ctx.body.challenge, ctx.body.token)
+        await vaptcha.validate(inparam.challenge, inparam.token)
     } catch (error) {
         log.error(error)
         ctx.body = { err: true, msg: '验证失败' }
         return
     }
     // 入参检查
-    inparam = ctx.request.body
     new UserCheck().check(inparam)
     // 检查用户是否已经存在
     const exist = await new UserModel().isExist({
