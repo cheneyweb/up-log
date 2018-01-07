@@ -61,6 +61,9 @@ router.post('/auth', function (ctx, next) {
 
 // 更新服务标识
 router.get('/updatesid', async function (ctx, next) {
+    log.info('已经进入路由')
+    log.info(ctx.tokenVerify)
+    log.info('已经进入路由2')
     // 检查入参
     if (!ctx.tokenVerify) {
         ctx.body = { err: true, msg: '入参不合法' }
