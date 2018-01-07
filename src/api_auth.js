@@ -49,7 +49,7 @@ router.use('/auth', async function (ctx, next) {
         ctx.user = user
         next()
     } else {
-        ctx.status = 401
+        ctx.status = 200
         ctx.body = { err: true, msg: '用户名或密码错误' }
     }
 })
