@@ -33,6 +33,7 @@ router.post('/reg', async function (ctx, next) {
         log.info(req.body.challenge, req.body.token)
         await vaptcha.validate(req.body.challenge, req.body.token)
     } catch (error) {
+        log.error(error)
         ctx.body = { err: true, msg: '验证失败' }
         return
     }
