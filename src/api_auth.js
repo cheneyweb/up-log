@@ -5,6 +5,8 @@ const Router = require('koa-router')
 const router = new Router()
 // 认证相关
 const jwt = require('jsonwebtoken')
+const Vaptcha = require('vaptcha-sdk')
+const vaptcha = new VaptchaSdk(config.vaptcha.vid, config.vaptcha.key)
 // 工具相关
 const _ = require('lodash')
 const uuidv4 = require('uuid/v4')
@@ -15,8 +17,25 @@ const UserCheck = require('./lib/UserCheck')
 const UserModel = require('./model/UserModel')
 const expired = 60 * 60 * 24    // 默认TOKEN一天有效期
 
+// 人机验证码模块
+router.get('/vaptcha/getVaptcha', async function (ctx, next) {
+    ctx.body = await vaptcha.getChallenge()
+})
+
+router.get('/vaptcha/getDownTime', async function (ctx, next) {
+    ctx.body = await vaptcha.downTime(req.query.data)
+})
+
 // 用户注册
 router.post('/reg', async function (ctx, next) {
+    try {
+        log.info('进行验证')
+        log.info(req.body.challenge, req.body.token)
+        await vaptcha.validate(req.body.challenge, req.body.token)
+    } catch (error) {
+        ctx.body = { err: true, msg: '验证失败' }
+        return
+    }
     // 入参检查
     inparam = ctx.request.body
     new UserCheck().check(inparam)
