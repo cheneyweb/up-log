@@ -6,7 +6,7 @@ const router = new Router()
 // 认证相关
 const jwt = require('jsonwebtoken')
 const Vaptcha = require('vaptcha-sdk')
-const vaptcha = new VaptchaSdk(config.vaptcha.vid, config.vaptcha.key)
+const vaptcha = new Vaptcha(config.vaptcha.vid, config.vaptcha.key)
 // 工具相关
 const _ = require('lodash')
 const uuidv4 = require('uuid/v4')
