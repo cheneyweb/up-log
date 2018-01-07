@@ -29,9 +29,7 @@ router.get('/vaptcha/getDownTime', async function (ctx, next) {
 // 用户注册
 router.post('/reg', async function (ctx, next) {
     try {
-        log.info('进行验证')
-        log.info(req.body.challenge, req.body.token)
-        await vaptcha.validate(req.body.challenge, req.body.token)
+        await vaptcha.validate(ctx.body.challenge, ctx.body.token)
     } catch (error) {
         log.error(error)
         ctx.body = { err: true, msg: '验证失败' }
