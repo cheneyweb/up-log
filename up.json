@@ -10,6 +10,8 @@
     "memory": 128
   },
   "cors": {
-    "enable": true
+    "allowed_origins": ["*"],
+    "allowed_methods": ["HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"],
+    "allowed_headers": ["*"]
   }
 }

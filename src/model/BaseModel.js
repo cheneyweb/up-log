@@ -109,7 +109,6 @@ class BaseModel {
         // .then((res) => {
         //     return reslove(res)
         // }).catch((err) => {
-        //     console.error(err)
         //     return reject(err)
         // })
         // })
