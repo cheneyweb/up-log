@@ -21,7 +21,7 @@ const expired = 60 * 60 * 24    // 默认TOKEN一天有效期
 const CacheUtil = require('./lib/CacheUtil')
 
 // 人机验证码模块
-router.get('/vaptcha/getVaptcha', async function (ctx, next) {
+router.post('/vaptcha/getVaptcha', async function (ctx, next) {
     ctx.body = await vaptcha.getChallenge()
 })
 
