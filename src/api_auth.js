@@ -73,6 +73,7 @@ router.post('/sendemail', async function (ctx, next) {
         }
         new CacheUtil().set(inparam.username, captcha.toString())
     });
+    ctx.body = { err: false, msg: 'Y' }
 })
 
 // 用户注册
