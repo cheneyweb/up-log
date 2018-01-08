@@ -1,26 +1,16 @@
 # up-log
 基于UP无服务部署的云端共享日志系统
 
-[传送门：UPLOG官网文档](http://uplog.xserver.top)
+[传送门：UPLOG官网](http://uplog.xserver.top)
 
-框架目录结构
->
-    ├── Makefile                构建NODE8编码文件
-    ├── app.js                  应用入口
-    ├── config                  系统配置
-    │   ├── default.json
-    │   ├── develop.json
-    │   └── production.json
-    ├── node-v8.9.3-linux-x64   NODE8源码
-    ├── node_modules            外部模块
-    ├── package.json
-    ├── src                     应用源码（编码工作区）
-    │   ├── api_auth.js         业务控制器
-    │   ├── api_log.js          业务控制器
-    │   ├── lib                 自定义工具库
-    │   └── model               业务模型
-    └── up.json                 UP配置
-
+使用说明
+```javascript
+    【POST】 https://dl57vasdud645.cloudfront.net/uplog   //通过此URL上传日志
+    
+    【BODY】 {"sid":"服务标识","log":"日志内容", ...}       // application/json
+    
+    【说 明】sid是由平台提供的服务标识，log为必须的日志内容，其余可拓展任意字段
+```
 帮助联系
 >
 	作者:cheneyxu
