@@ -49,6 +49,7 @@ router.post('/sendemail', async function (ctx, next) {
         return
     }
     // 发送邮件
+    const captcha = randomNum(1000,9999)
     await axios.post(config.email.url, { emailkey: 'cheneyemail', emailserver: 'uplog', emailtype: 'regcaptcha', emaildata: captcha.toString(), username: inparam.username })
     // 邮件验证码写入缓存
     new CacheUtil().set(inparam.username, captcha.toString())
@@ -131,5 +132,13 @@ router.get('/updatesid', async function (ctx, next) {
         ctx.body = { err: false, sid: newsid }
     }
 })
+
+// 随机数
+function randomNum(min, max) {
+    let range = max - min;
+    let rand = Math.random();
+    let num = min + Math.round(rand * range); //四舍五入
+    return num;
+}
 
 module.exports = router
