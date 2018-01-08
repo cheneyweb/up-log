@@ -10,12 +10,20 @@
     },
     "auth": {
         "secret": "cheneyweb",
-        "pass": ["/reg","/auth","uplog"],
+        "pass": ["/reg","/auth","/uplog","/vaptcha/*","/sendemail"],
         "role":{
             "admin":[".*"],
             "financialAdmin":["/financial/*"],
             "financialManager":["/financial/test1","/financial/test2"],
             "financialStaff":["GET:/financial/test1","POST:/financial/test2"]
         }
+    },
+    "vaptcha":{
+        "vid": "5a51ef70a48617214c19ccfd",
+        "key": "c05b947cdca14df0bd77341d148f4170"
+    },
+    "email":{
+        "user":"captcha@xserver.top",
+        "pass":"Qiyexys36"
     }
 }

@@ -7,6 +7,7 @@ const router = new Router()
 const jwt = require('jsonwebtoken')
 const Vaptcha = require('vaptcha-sdk')
 const vaptcha = new Vaptcha(config.vaptcha.vid, config.vaptcha.key)
+const nodemailer = require('nodemailer')
 // 工具相关
 const _ = require('lodash')
 const uuidv4 = require('uuid/v4')
@@ -16,6 +17,8 @@ const log = require('tracer').colorConsole({ level: config.log.level })
 const UserCheck = require('./lib/UserCheck')
 const UserModel = require('./model/UserModel')
 const expired = 60 * 60 * 24    // 默认TOKEN一天有效期
+// 缓存相关
+const CacheUtil = require('./lib/CacheUtil')
 
 // 人机验证码模块
 router.get('/vaptcha/getVaptcha', async function (ctx, next) {
@@ -24,6 +27,52 @@ router.get('/vaptcha/getVaptcha', async function (ctx, next) {
 
 router.get('/vaptcha/getDownTime', async function (ctx, next) {
     ctx.body = await vaptcha.downTime(req.query.data)
+})
+
+// 发送邮件
+router.post('/sendemail', async function (ctx, next) {
+    inparam = ctx.request.body
+    if (!inparam.username) {
+        ctx.body = { err: true, msg: '入参不合法' }
+        return
+    }
+    // 检查用户是否已经存在
+    const exist = await new UserModel().isExist({
+        ProjectionExpression: 'username',
+        KeyConditionExpression: "username = :username",
+        ExpressionAttributeValues: {
+            ':username': inparam.username
+        }
+    })
+    if (exist) {
+        ctx.body = { err: true, msg: '用户已存在' }
+        return
+    }
+    let captcha = randomNum(1000, 9999)
+    let transporter = nodemailer.createTransport({
+        host: 'smtp.mxhichina.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: config.email.user,
+            pass: config.email.pass
+        }
+    });
+
+    let mailOptions = {
+        from: '"UPLOG" <captcha@xserver.top>',
+        to: inparam.username,
+        subject: `UPLOG注册验证码:${captcha}`,
+        text: `感谢您注册UPLOG云日志服务，这是您的邮箱验证码：<b>${captcha}</b>`,
+        html: `感谢您注册UPLOG云日志服务，这是您的邮箱验证码：<b>${captcha}</b>`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return log.error(error)
+        }
+        new CacheUtil().set(inparam.username, captcha.toString())
+    });
 })
 
 // 用户注册
@@ -38,6 +87,12 @@ router.post('/reg', async function (ctx, next) {
     }
     // 入参检查
     new UserCheck().check(inparam)
+    // 邮箱验证码检查
+    const emailcode = await new CacheUtil().get(inparam.username)
+    if (emailcode != inparam.emailcode) {
+        ctx.body = { err: true, msg: '邮箱验证码不正确' }
+        return
+    }
     // 检查用户是否已经存在
     const exist = await new UserModel().isExist({
         ProjectionExpression: 'username',
@@ -53,7 +108,6 @@ router.post('/reg', async function (ctx, next) {
     } else {
         ctx.body = { err: true, msg: '用户已存在' }
     }
-
 })
 
 // 用户登录
@@ -97,5 +151,13 @@ router.get('/updatesid', async function (ctx, next) {
         ctx.body = { err: false, sid: newsid }
     }
 })
+
+// 随机数
+function randomNum(min, max) {
+    let range = max - min;
+    let rand = Math.random();
+    let num = min + Math.round(rand * range); //四舍五入
+    return num;
+}
 
 module.exports = router

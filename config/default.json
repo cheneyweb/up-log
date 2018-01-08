@@ -10,7 +10,7 @@
     },
     "auth": {
         "secret": "cheneyweb",
-        "pass": ["/reg","/auth","/uplog","/vaptcha/*"],
+        "pass": ["/reg","/auth","/uplog","/vaptcha/*","/sendemail"],
         "role":{
             "admin":[".*"],
             "financialAdmin":["/financial/*"],
@@ -21,5 +21,9 @@
     "vaptcha":{
         "vid": "5a51ef70a48617214c19ccfd",
         "key": "c05b947cdca14df0bd77341d148f4170"
+    },
+    "email":{
+        "user":"captcha@xserver.top",
+        "pass":"Qiyexys36"
     }
 }
