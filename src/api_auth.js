@@ -10,6 +10,7 @@ const vaptcha = new Vaptcha(config.vaptcha.vid, config.vaptcha.key)
 // 工具相关
 const _ = require('lodash')
 const uuidv4 = require('uuid/v4')
+const axios = require('axios')
 // 日志相关
 const log = require('tracer').colorConsole({ level: config.log.level })
 // 持久层相关
