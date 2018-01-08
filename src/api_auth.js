@@ -51,8 +51,8 @@ router.post('/sendemail', async function (ctx, next) {
     let captcha = randomNum(1000, 9999)
     let transporter = nodemailer.createTransport({
         host: 'smtp.mxhichina.com',
-        port: 465,
-        secure: true,
+        port: 25,
+        secure: false,
         auth: {
             user: config.email.user,
             pass: config.email.pass
