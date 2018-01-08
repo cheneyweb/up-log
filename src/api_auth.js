@@ -7,7 +7,6 @@ const router = new Router()
 const jwt = require('jsonwebtoken')
 const Vaptcha = require('vaptcha-sdk')
 const vaptcha = new Vaptcha(config.vaptcha.vid, config.vaptcha.key)
-const nodemailer = require('nodemailer')
 // 工具相关
 const _ = require('lodash')
 const uuidv4 = require('uuid/v4')
@@ -48,31 +47,10 @@ router.post('/sendemail', async function (ctx, next) {
         ctx.body = { err: true, msg: '用户已存在' }
         return
     }
-    let captcha = randomNum(1000, 9999)
-    let transporter = nodemailer.createTransport({
-        host: 'smtp.mxhichina.com',
-        port: 25,
-        secure: false,
-        auth: {
-            user: config.email.user,
-            pass: config.email.pass
-        }
-    });
-
-    let mailOptions = {
-        from: '"UPLOG" <captcha@xserver.top>',
-        to: inparam.username,
-        subject: `UPLOG注册验证码:${captcha}`,
-        text: `感谢您注册UPLOG云日志服务，这是您的邮箱验证码：<b>${captcha}</b>`,
-        html: `感谢您注册UPLOG云日志服务，这是您的邮箱验证码：<b>${captcha}</b>`
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return log.error(error)
-        }
-        new CacheUtil().set(inparam.username, captcha.toString())
-    });
+    // 发送邮件
+    await axios.post(config.email.url, { emailkey: 'cheneyemail', emailserver: 'uplog', emailtype: 'regcaptcha', emaildata: captcha.toString(), username: inparam.username })
+    // 邮件验证码写入缓存
+    new CacheUtil().set(inparam.username, captcha.toString())
     ctx.body = { err: false, msg: 'Y' }
 })
 
@@ -152,13 +130,5 @@ router.get('/updatesid', async function (ctx, next) {
         ctx.body = { err: false, sid: newsid }
     }
 })
-
-// 随机数
-function randomNum(min, max) {
-    let range = max - min;
-    let rand = Math.random();
-    let num = min + Math.round(rand * range); //四舍五入
-    return num;
-}
 
 module.exports = router
