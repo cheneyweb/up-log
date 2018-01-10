@@ -38,7 +38,7 @@ router.post('/uplog', async function (ctx, next) {
     if (res) {
         ctx.request.body.username = res.username
         await new LogModel().putItem(ctx.request.body)
-        ctx.body = { err: false, msg: 'Y' }
+        ctx.body = { err: false, msg: 'SUCCESS' }
     } else {
         ctx.body = { err: true, msg: 'sid不正确' }
     }
