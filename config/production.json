@@ -11,6 +11,7 @@
     "auth": {
         "secret": "cheneyweb",
         "pass": ["/reg","/auth","/uplog","/vaptcha/*","/sendemail"],
+        "cors": true,
         "role":{
             "admin":[".*"],
             "financialAdmin":["/financial/*"],
