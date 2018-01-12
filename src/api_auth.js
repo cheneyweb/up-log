@@ -16,7 +16,7 @@ const log = require('tracer').colorConsole({ level: config.log.level })
 // 持久层相关
 const UserCheck = require('./lib/UserCheck')
 const UserModel = require('./model/UserModel')
-const expired = 60 * 60 * 24 * 7    // 默认TOKEN七天有效期
+const expired = 60 * 60 * 24 * 30         // 默认TOKEN30天有效期
 // const expired = 10                     // 测试TOKEN过期
 // 缓存相关
 const CacheUtil = require('./lib/CacheUtil')

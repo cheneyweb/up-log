@@ -51,15 +51,19 @@ router.post('/querylog', async function (ctx, next) {
         ctx.body = { err: true, msg: '查询参数错误' }
         return
     }
+    if (!ctx.request.body.startKey || ctx.request.body.startKey == 'undefined') {
+        ctx.request.body.startKey = null
+    }
     const res = await new LogModel().page({
         KeyConditionExpression: 'username = :username AND createdAt between :createdAt0 AND :createdAt1',
+        ScanIndexForward: false,
         ExpressionAttributeValues: {
             ':username': ctx.tokenVerify.username,
             ':createdAt0': ctx.request.body.createdAt[0],
             ':createdAt1': ctx.request.body.createdAt[1]
         }
-    }, { limit: 1000, startKey: null, lastEvaluatedKeyTemplate: ['username', 'createdAt'] })
-    ctx.body = { err: false, Items: res.Items.reverse() }
+    }, { limit: 20, startKey: ctx.request.body.startKey, lastEvaluatedKeyTemplate: ['username', 'createdAt'] })
+    ctx.body = { err: false, Items: res.Items, LastEvaluatedKey: res.LastEvaluatedKey }
 })
 
 module.exports = router
