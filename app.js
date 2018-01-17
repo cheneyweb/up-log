@@ -13,6 +13,7 @@ const log = require('tracer').colorConsole({ level: config.log.level })
 // 业务控制器
 const authrouter = require('./src/api_auth')
 const logrouter = require('./src/api_log')
+const configrouter = require('./src/api_config')
 
 // 初始化应用服务，加载所有中间件
 const app = new Koa()
@@ -23,6 +24,7 @@ app.use(xlog(config.log, (ctx) => { log.info('异步日志处理', ctx.request.b
 app.use(xauth(config.auth, (v) => v))   // TOKEN身份认证中间件，，参数1：认证配置，参数2：额外自定义TOKEN解析规则
 app.use(authrouter.routes())            // 业务路由中间件
 app.use(logrouter.routes())             // 业务路由中间件
+app.use(configrouter.routes())          // 业务路由中间件
 
 // 启动应用服务
 app.listen(PORT)

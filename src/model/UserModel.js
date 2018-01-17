@@ -41,6 +41,6 @@ module.exports = class UserModel extends BaseModel {
                 ':sid': inparam.sid
             }
         })
-        return res.Items[0]
+        return res.Items ? res.Items[0] : null
     }
 }

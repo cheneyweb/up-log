@@ -10,7 +10,7 @@
     },
     "auth": {
         "secret": "cheneyweb",
-        "pass": ["/reg","/auth","/uplog","/vaptcha/*","/sendemail"],
+        "pass": ["/reg","/auth","/uplog","/getconfig","/vaptcha/*","/sendemail"],
         "cors": true,
         "role":{
             "admin":[".*"],

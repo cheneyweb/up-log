@@ -15,8 +15,8 @@ const ConfigModel = require('./model/ConfigModel')
 router.post('/upconfig', async function (ctx, next) {
     // 检查入参
     let inparam = ctx.request.body
-    if (!inparam || !inparam.sid || inparam.sid.length != 36) {
-        ctx.body = { err: true, msg: 'sid不正确' }
+    if (!inparam || !ctx.tokenVerify) {
+        ctx.body = { err: true, msg: '查询参数错误' }
         return
     }
     if (!inparam.configs && !inparam.code) {
@@ -27,20 +27,34 @@ router.post('/upconfig', async function (ctx, next) {
         ctx.body = { err: true, msg: 'config不能为空' }
         return
     }
-    // 校验SID
-    const res = await new UserModel().sid(inparam)
     // 正确则写入配置
-    if (res) {
-        for (let item of inparam.configs) {
-            const username = res.username
-            const code = item.code
-            const config = item.config
-            new ConfigModel().putItem({ username, code, config })
-        }
-        ctx.body = { err: false, msg: 'SUCCESS' }
-    } else {
-        ctx.body = { err: true, msg: 'sid不正确' }
+    for (let item of inparam.configs) {
+        const username = ctx.tokenVerify.username
+        const code = item.code
+        const config = item.config
+        await new ConfigModel().putItem({ username, code, config })
     }
+    ctx.body = { err: false, msg: 'SUCCESS' }
+
+})
+
+// 删除配置
+router.post('/delconfig', async function (ctx, next) {
+    // 检查入参
+    let inparam = ctx.request.body
+    if (!inparam || !ctx.tokenVerify) {
+        ctx.body = { err: true, msg: '查询参数错误' }
+        return
+    }
+    if (!inparam.configs && !inparam.code) {
+        ctx.body = { err: true, msg: 'code不能为空' }
+        return
+    }
+    const username = ctx.tokenVerify.username
+    const code = inparam.code
+    new ConfigModel().deleteItem({ Key: { username, code } })
+
+    ctx.body = { err: false, msg: 'SUCCESS' }
 })
 
 // 查询配置
@@ -50,19 +64,21 @@ router.post('/queryconfig', async function (ctx, next) {
         ctx.body = { err: true, msg: '查询参数错误' }
         return
     }
-    if (!ctx.request.body.startKey || ctx.request.body.startKey == 'undefined') {
-        ctx.request.body.startKey = null
-    }
-    const res = await new ConfigModel().page({
+    const res = await new ConfigModel().query({
+        ProjectionExpression: '#code,#config',
         KeyConditionExpression: 'username = :username',
+        ExpressionAttributeNames: {
+            '#code': 'code',
+            '#config': 'config'
+        },
         ExpressionAttributeValues: {
             ':username': ctx.tokenVerify.username
         }
-    }, { limit: 100, startKey: ctx.request.body.startKey, lastEvaluatedKeyTemplate: ['username', 'code'] })
-    ctx.body = { err: false, Items: res.Items, LastEvaluatedKey: res.LastEvaluatedKey }
+    })
+    ctx.body = { err: false, Items: res.Items }
 })
 
-// 获取单个配置
+// 获取配置信息
 router.post('/getconfig', async function (ctx, next) {
     // 检查入参
     if (!ctx.request.body || !ctx.request.body.sid || !ctx.request.body.code || !ctx.tokenVerify) {
