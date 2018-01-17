@@ -14,42 +14,29 @@ const ConfigModel = require('./model/ConfigModel')
 // 上传配置
 router.post('/upconfig', async function (ctx, next) {
     // 检查入参
-    if (!ctx.request.body || !ctx.request.body.sid || ctx.request.body.sid.length != 36) {
+    let inparam = ctx.request.body
+    if (!inparam || !inparam.sid || inparam.sid.length != 36) {
         ctx.body = { err: true, msg: 'sid不正确' }
         return
     }
-    if (!ctx.request.body.code) {
+    if (!inparam.configs && !inparam.code) {
         ctx.body = { err: true, msg: 'code不能为空' }
         return
     }
-    if (!ctx.request.body.config) {
+    if (!inparam.configs && !inparam.config) {
         ctx.body = { err: true, msg: 'config不能为空' }
         return
     }
-    // 检查是否重复
-    const exist = await new ConfigModel().isExist({
-        ProjectionExpression: 'username',
-        KeyConditionExpression: "username = :username AND #code = :code",
-        ExpressionAttributeNames: {
-            '#code': 'code'
-        },
-        ExpressionAttributeValues: {
-            ':username': ctx.request.body.username,
-            ':code': ctx.request.body.code
-        }
-    })
-    if (exist) {
-        ctx.body = { err: true, msg: '配置编号已存在' }
-        return
-    }
     // 校验SID
-    const res = await new UserModel().sid(ctx.request.body)
+    const res = await new UserModel().sid(inparam)
     // 正确则写入配置
     if (res) {
-        const username = res.username
-        const code = ctx.request.body.code
-        const config = ctx.request.body.config
-        await new ConfigModel().putItem({ username, code, config })
+        for (let item of inparam.configs) {
+            const username = res.username
+            const code = item.code
+            const config = item.config
+            new ConfigModel().putItem({ username, code, config })
+        }
         ctx.body = { err: false, msg: 'SUCCESS' }
     } else {
         ctx.body = { err: true, msg: 'sid不正确' }
@@ -71,7 +58,7 @@ router.post('/queryconfig', async function (ctx, next) {
         ExpressionAttributeValues: {
             ':username': ctx.tokenVerify.username
         }
-    }, { limit: 20, startKey: ctx.request.body.startKey, lastEvaluatedKeyTemplate: ['username', 'code'] })
+    }, { limit: 100, startKey: ctx.request.body.startKey, lastEvaluatedKeyTemplate: ['username', 'code'] })
     ctx.body = { err: false, Items: res.Items, LastEvaluatedKey: res.LastEvaluatedKey }
 })
 
