@@ -81,20 +81,35 @@ router.post('/queryconfig', async function (ctx, next) {
 // 获取配置信息
 router.post('/getconfig', async function (ctx, next) {
     // 检查入参
-    if (!ctx.request.body || !ctx.request.body.sid || !ctx.request.body.code || !ctx.tokenVerify) {
+    let inparam = ctx.request.body
+    if (!inparam || !inparam.sid) {
         ctx.body = { err: true, msg: '查询参数错误' }
         return
     }
-    if (!ctx.request.body.startKey || ctx.request.body.startKey == 'undefined') {
-        ctx.request.body.startKey = null
-    }
     // 校验SID
-    const user = await new UserModel().sid(ctx.request.body)
+    const user = await new UserModel().sid(inparam)
     if (user) {
-        const res = await new ConfigModel().getItem({
-            Key: { 'username': user.username, 'code': code }
-        })
-        ctx.body = { err: false, config: res.Item.config }
+        let query = {
+            ProjectionExpression: '#code,#config',
+            KeyConditionExpression: 'username = :username',
+            ExpressionAttributeNames: {
+                '#code': 'code',
+                '#config': 'config'
+            },
+            ExpressionAttributeValues: {
+                ':username': user.username
+            }
+        }
+        if (inparam.code) {
+            query.KeyConditionExpression += ' AND #code = :code'
+            query.ExpressionAttributeValues[':code'] = inparam.code
+        }
+        const res = await new ConfigModel().query(query)
+        if (inparam.code) {
+            ctx.body = { err: false, config: res.Items[0] }
+        } else {
+            ctx.body = { err: false, configs: res.Items }
+        }
     } else {
         ctx.body = { err: true, msg: 'sid不正确' }
     }
