@@ -1,4 +1,13 @@
 {
+  "name": "up-server",
+  "version": "1.0.0",
+  "description": "基于UP无服务部署的云端共享日志系统",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "author": "cheneyxu",
+  "license": "ISC",
   "dependencies": {
     "@koa/cors": "^2.2.1",
     "aws-sdk": "^2.188.0",
@@ -8,16 +17,13 @@
     "koa": "^2.4.1",
     "koa-body": "^2.5.0",
     "koa-router": "^7.3.0",
-    "koa-xauth": "^0.8.0",
-    "koa-xerror": "^0.3.0",
-    "koa-xlog": "^0.2.0",
+    "koa-xauth": "^0.9.0",
+    "koa-xerror": "^0.9.0",
+    "koa-xlog": "^0.9.0",
     "lodash": "^4.17.4",
     "redis": "^2.8.0",
     "tracer": "^0.8.11",
     "uuid": "^3.2.1",
     "vaptcha-sdk": "^1.1.1"
-  },
-  "scripts": {
-    "start": "node app"
   }
 }

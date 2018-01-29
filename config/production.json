@@ -6,18 +6,21 @@
         }
     },
     "error":{
-        "debug": false
+        "debug": false,
+        "errStatus": 200
     },
     "auth": {
         "secret": "cheneyweb",
         "pass": ["/reg","/auth","/uplog","/getconfig","/vaptcha/*","/sendemail"],
-        "cors": true,
         "role":{
             "admin":[".*"],
             "financialAdmin":["/financial/*"],
             "financialManager":["/financial/test1","/financial/test2"],
             "financialStaff":["GET:/financial/test1","POST:/financial/test2"]
-        }
+        },
+        "cors": true,
+        "errMsg": "未认证",
+        "errStatus": 401
     },
     "vaptcha":{
         "vid": "5a51ef70a48617214c19ccfd",
