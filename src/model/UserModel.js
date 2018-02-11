@@ -8,7 +8,7 @@ module.exports = class UserModel extends BaseModel {
         super()
         // 设置表名
         this.params = {
-            TableName: 'uplog-user'
+            TableName: 'up-user'
         }
         // 设置对象属性
         this.item = {
