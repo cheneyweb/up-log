@@ -8,7 +8,7 @@ module.exports = class LogModel extends BaseModel {
         super()
         // 设置表名
         this.params = {
-            TableName: 'uplog-data'
+            TableName: 'up-log'
         }
         // 设置对象属性
         this.item = {
