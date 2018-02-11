@@ -1,7 +1,7 @@
 # up-log
-基于UP无服务部署的云端共享日志系统
+基于UP无服务部署的云端应用开发服务
 
-[传送门：UPLOG官网](http://uplog.xserver.top)
+[传送门：UPLOG官网](http://up.xserver.top)
 
 使用说明
 ```javascript
@@ -22,3 +22,4 @@
 	2018.01.07:初版
 	2018.01.08:增加注册邮箱校验
 	2018.01.30:更新koa-xlog/koa-xerror/koa-xauth中间件
+	2018.02.11:更新BaseModel数据库操作基类，批量插入支持递归插入失败数据
