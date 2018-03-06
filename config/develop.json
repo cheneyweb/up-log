@@ -11,7 +11,7 @@
     },
     "auth": {
         "secret": "cheneyweb",
-        "pass": ["/reg","/auth","/uplog","/getconfig","/vaptcha/*","/sendemail"],
+        "pass": ["/ping","/reg","/auth","/uplog","/getconfig","/vaptcha/*","/sendemail"],
         "role":{
             "admin":[".*"],
             "financialAdmin":["/financial/*"],
