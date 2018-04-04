@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@koa/cors": "^2.2.1",
-    "aws-sdk": "^2.205.0",
+    "aws-sdk": "^2.220.1",
     "axios": "^0.18.0",
     "config": "^1.30.0",
     "jsonwebtoken": "^8.2.0",
